@@ -5,6 +5,25 @@
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  /* Accessibility: high-contrast toggle */
+  var contrastToggle = document.getElementById("contrast-toggle");
+  var CONTRAST_KEY = "fc-contrast";
+  function applyContrast(isHigh) {
+    document.documentElement.setAttribute("data-contrast", isHigh ? "high" : "normal");
+    if (contrastToggle) {
+      contrastToggle.setAttribute("aria-pressed", isHigh ? "true" : "false");
+      contrastToggle.setAttribute("aria-label", isHigh ? "Desativar alto contraste" : "Ativar alto contraste");
+    }
+  }
+  applyContrast(window.localStorage && localStorage.getItem(CONTRAST_KEY) === "high");
+  if (contrastToggle) {
+    contrastToggle.addEventListener("click", function () {
+      var isHigh = document.documentElement.getAttribute("data-contrast") !== "high";
+      applyContrast(isHigh);
+      if (window.localStorage) localStorage.setItem(CONTRAST_KEY, isHigh ? "high" : "normal");
+    });
+  }
+
   /* Mobile nav toggle */
   var navToggle = document.getElementById("nav-toggle");
   var mainNav = document.getElementById("main-nav");
