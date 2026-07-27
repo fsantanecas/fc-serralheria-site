@@ -91,6 +91,55 @@
     });
   });
 
+  /* Testimonial carousel: drag-to-scroll + prev/next buttons */
+  var track = document.getElementById("testimonial-track");
+  if (track) {
+    var isDown = false;
+    var startX = 0;
+    var startScroll = 0;
+    var dragged = false;
+
+    function dragStart(x) {
+      isDown = true;
+      dragged = false;
+      startX = x;
+      startScroll = track.scrollLeft;
+      track.classList.add("is-dragging");
+    }
+    function dragMove(x) {
+      if (!isDown) return;
+      var delta = x - startX;
+      if (Math.abs(delta) > 4) dragged = true;
+      track.scrollLeft = startScroll - delta;
+    }
+    function dragEnd() {
+      isDown = false;
+      track.classList.remove("is-dragging");
+    }
+
+    track.addEventListener("mousedown", function (e) { dragStart(e.pageX); });
+    window.addEventListener("mousemove", function (e) { dragMove(e.pageX); });
+    window.addEventListener("mouseup", dragEnd);
+    track.addEventListener("touchstart", function (e) { dragStart(e.touches[0].pageX); }, { passive: true });
+    track.addEventListener("touchmove", function (e) { dragMove(e.touches[0].pageX); }, { passive: true });
+    track.addEventListener("touchend", dragEnd);
+
+    track.addEventListener("click", function (e) {
+      if (dragged) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+    var carousel = track.closest(".carousel");
+    var prevBtn = carousel && carousel.querySelector(".carousel-prev");
+    var nextBtn = carousel && carousel.querySelector(".carousel-next");
+    function scrollByCard(dir) {
+      var card = track.querySelector(".testimonial-card");
+      var step = card ? card.offsetWidth + 20 : 300;
+      track.scrollBy({ left: dir * step, behavior: "smooth" });
+    }
+    if (prevBtn) prevBtn.addEventListener("click", function () { scrollByCard(-1); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { scrollByCard(1); });
+  }
+
   /* Lightbox */
   var lightbox = document.getElementById("lightbox");
   var lightboxImg = document.getElementById("lightbox-img");
