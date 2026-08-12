@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.fcserralheria.com.br/sitemap.xml
+Sitemap: https://fcaluminioevidro.com.br/sitemap.xml
